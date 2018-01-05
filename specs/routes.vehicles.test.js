@@ -1,8 +1,4 @@
 describe('the vehicle router', () => {
-  it('should have one test', () => {
-    expect(true).toBe(true);
-  });
-
   describe('/:id', () => {
     //request from client
     it('should receive a GET request from the client');
@@ -19,7 +15,7 @@ describe('the vehicle router', () => {
     it('should receive a vin number from GM');
     it('should receive a color from GM');
     it('should receive a "fourDoorSedan" status from GM');
-    it('should receive a "twoDoorCoupe" status from GM')
+    it('should receive a "twoDoorCoupe" status from GM');
     it('should receive a driveTrain from GM');
 
     //response to client
