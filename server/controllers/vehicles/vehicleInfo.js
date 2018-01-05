@@ -62,13 +62,13 @@ function fetchGMVehiclInfo(id) {
       id: id,
       responseType: 'JSON'
     })
-  }
+  };
   return new Promise((resolve, reject) => {
     fetch(path, init)
       .then(res => res.json())
       .then(data => resolve(data))
       .catch(err => reject(err));
-  })
+  });
 }
 
 /**
