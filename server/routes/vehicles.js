@@ -5,6 +5,7 @@ router
   .get('/:id', (req, res) => {
     res.send(`vehicle ${req.params.id}`)
   })
+  .get('/:id/doors', (req, res) => res.send('doors'))
   .get('/:id/fuel', (req, res) => res.send('fuel'))
   .get('/:id/battery', (req, res) => {
     res.send('battery');
