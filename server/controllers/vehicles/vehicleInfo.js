@@ -90,6 +90,7 @@ function processGMData(response) {
       doorCount: determineDoorCount(data),
       driveTrain: data.driveTrain.value
     };
+    console.log('OK: sending data to client')
     return resolve(processedData);
   });
 }
