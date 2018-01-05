@@ -11,7 +11,7 @@ describe('the vehicle router', () => {
 
     //response from GM
     it('should receive a response from GM API');
-    it('should receive a "data" attribute')
+    it('should receive a "data" attribute');
     it('should receive a vin number from GM');
     it('should receive a color from GM');
     it('should receive a "fourDoorSedan" status from GM');
@@ -46,7 +46,7 @@ describe('the vehicle router', () => {
     it('should send a response back to the client');
     it('should send a location for each door');
     it('should send a "locked status" for each door');
-    it('should send an array')
+    it('should send an array');
   });
 
   describe('/:id/fuel', () => {
@@ -89,7 +89,7 @@ describe('the vehicle router', () => {
 
   describe('/:id/engine', () => {
     //request from client
-    it('should receive a POST request from the client')
+    it('should receive a POST request from the client');
     it('should receive the "action" of the client in the request body');
 
     //request to GM
