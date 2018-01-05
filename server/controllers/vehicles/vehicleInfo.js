@@ -28,8 +28,9 @@ const Promise = require('promise-polyfill');
 // it should send a single object
 
 /**
- * route controller that handles GET requests for a given information
- * Sends to the client a JSON object that 
+ * Route controller that handles GET requests for a vehicles information.
+ * Sends to the client an object that contains the following:
+ *   vin, color, door count, and drive train.
  * @param {{ params: { id: number } }} req - a readable stream that contains an id param
  * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res - a writeable stream that is sent to the client
  */
