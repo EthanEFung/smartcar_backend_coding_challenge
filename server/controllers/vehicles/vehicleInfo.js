@@ -42,6 +42,11 @@ function vehicleInfo(req, res) {
     .catch(err => res.send(err));
 }
 
+/**
+ * 
+ * @param { Promise } id 
+ * @return { Promise }
+ */
 function fetchGMVehiclInfo(id) {
   console.log('fetching..');
   //request vehicle information from GM
@@ -64,11 +69,16 @@ function fetchGMVehiclInfo(id) {
   })
 }
 
+/**
+ * 
+ * @param { Promise } response 
+ * @return { Promise }
+ */
 function processGMData(response) {
   console.log('processing...');
   return new Promise((resolve, reject) => {
     if (response.status === '404') {
-      reject(response);
+      return reject(response);
     }
     const { data } = response;
     const processedData = {
@@ -77,10 +87,14 @@ function processGMData(response) {
       doorCount: determineDoorCount(data),
       driveTrain: data.driveTrain.value
     };
-    resolve(processedData);
+    return resolve(processedData);
   });
 }
 
+/**
+ * 
+ * @param {{ fourDoorSedan: { value: string }, twoDoorCoupe: { value: string } }} data
+ */
 function determineDoorCount(data) {
   if (
     data.fourDoorSedan &&
