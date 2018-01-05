@@ -43,7 +43,9 @@ function vehicleInfo(req, res) {
 }
 
 /**
- * 
+ * Promise that makes a GET request to the GM API.
+ * Returns a promise with a GM Response.
+ * To Note: GM API does not throw errors
  * @param { Promise } id 
  * @return { Promise }
  */
@@ -70,7 +72,8 @@ function fetchGMVehiclInfo(id) {
 }
 
 /**
- * 
+ * Receives the GET request from the GM API and resolves
+ * a formatted object to send to the client.
  * @param { Promise } response 
  * @return { Promise }
  */
@@ -92,7 +95,8 @@ function processGMData(response) {
 }
 
 /**
- * 
+ * Parses response object sent from the GM API;
+ * returns the door count.
  * @param {{ fourDoorSedan: { value: string }, twoDoorCoupe: { value: string } }} data
  */
 function determineDoorCount(data) {
