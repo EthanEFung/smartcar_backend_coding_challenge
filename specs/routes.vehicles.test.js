@@ -28,6 +28,7 @@ describe('the vehicle router', () => {
     it('should send a color from GM');
     it('should send a doorCount from GM');
     it('should send a driveTrain from GM');
+    it('should send a single object')
   });
 
   describe('/:id/doors', () => {
