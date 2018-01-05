@@ -92,9 +92,21 @@ describe('the vehicle router', () => {
   });
 
   describe('/:id/engine', () => {
+    //request from client
     it('should receive a POST request from the client')
-    it('should send a request to GM API');
+    it('should receive the "action" of the client in the request body');
+
+    //request to GM
+    it('should send a POST request to GM');
+    it('should request given action');
+
+    //response from GM
     it('should receive a response from GM API');
+    it('should receive a status of the cars engine');
+
+    //response to client
     it('should send a response back to the client');
+    it('should send a status of the cars engine');
+    it('should send an object');
   });
 })
