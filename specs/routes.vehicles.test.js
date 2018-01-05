@@ -54,10 +54,22 @@ describe('the vehicle router', () => {
   });
 
   describe('/:id/fuel', () => {
+    //request from client
     it('should receive a request from the client');
-    it('should send a request to GM API');
+    it('should receive the id of the client in the params');
+
+    //request to GM
+    it('should send a request to GM');
+    it('should request the percentage of fuel left');
+
+    //response from GM
     it('should receive a response from GM API');
+    it('should receive the percentage of fuel left from GM');
+
+    //response to client
     it('should send a response back to the client');
+    it('should send the percentage of fuel left from GM');
+    it('should send an object');
   });
 
   describe('/:id/battery', () => {
