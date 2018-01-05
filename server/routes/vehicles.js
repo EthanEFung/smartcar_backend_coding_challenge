@@ -1,17 +1,18 @@
 
 const router = require('express').Router();
 
+//route controllers
+const vehicleInfo = require('../controllers/vehicles/vehicleInfo');
+const security = require('../controllers/vehicles/security');
+const fuelRange = require('../controllers/vehicles/fuelRange');
+const batteryRange = require('../controllers/vehicles/batteryRange');
+const engineAction = require('../controllers/vehicles/engineAction');
+
 router
-  .get('/:id', (req, res) => {
-    res.send(`vehicle ${req.params.id}`)
-  })
-  .get('/:id/doors', (req, res) => res.send('doors'))
-  .get('/:id/fuel', (req, res) => res.send('fuel'))
-  .get('/:id/battery', (req, res) => {
-    res.send('battery');
-  })
-  .post('/:id/engine', (req, res) => {
-    res.send('engine')
-  });
+  .get('/:id', vehicleInfo)
+  .get('/:id/doors', security)
+  .get('/:id/fuel', fuelRange)
+  .get('/:id/battery', batteryRange)
+  .post('/:id/engine', engineAction);
 
 module.exports = router;
