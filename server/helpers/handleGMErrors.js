@@ -1,7 +1,8 @@
 
 /**
- * 
- * @param {*} response 
+ * Receives a response from GM, and parses the status type.
+ * Throws when response is not successful.
+ * @param { Promise } response 
  */
 function handleGMErrors(response) {
   const type = response.status[0];
