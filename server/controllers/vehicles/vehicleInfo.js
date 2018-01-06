@@ -1,5 +1,5 @@
-const fetch = require('node-fetch');
 const Promise = require('promise-polyfill');
+const fetchGMData = require('../../helpers/fetchGMData');
 const handleGMErrors = require('../../helpers/handleGMErrors');
 
 // //request from client
@@ -49,30 +49,10 @@ function vehicleInfo(req, res) {
     })
   };
 
-  fetchGMVehicleInfo(path, init, req.params.id)
-    .then(processGMData)
+  fetchGMData(path, init, req.params.id)
+    .then(processGMVehicleInfoData)
     .then(data => res.send(data))
     .catch(err => res.send(err));
-}
-
-/**
- * Promise that makes a GET request to the GM API.
- * Returns a promise with a GM Response.
- * To Note: GM API does not throw errors
- * @param {string} path
- * @param {{ headers: {}, method: string, body: JSON }} init
- * @param {number} id 
- * @return { Promise }
- */
-function fetchGMVehicleInfo(path, init, id) {
-  console.log('fetching..');
-  //request vehicle information from GM
-  return new Promise((resolve, reject) => {
-    fetch(path, init)
-      .then(res => res.json())
-      .then(data => resolve(data))
-      .catch(err => reject(err));
-  });
 }
 
 /**
@@ -81,7 +61,7 @@ function fetchGMVehicleInfo(path, init, id) {
  * @param { Promise } response 
  * @return { Promise }
  */
-function processGMData(response) {
+function processGMVehicleInfoData(response) {
   console.log('processing...\nresponse status:', response.status);
   return new Promise((resolve, reject) => {
     try {
@@ -125,7 +105,6 @@ function determineDoorCount(data) {
 
 module.exports = {
   vehicleInfo,
-  fetchGMVehicleInfo,
-  processGMData,
+  processGMVehicleInfoData,
   determineDoorCount
 };
