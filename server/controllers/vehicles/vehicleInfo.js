@@ -31,7 +31,8 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
 /**
  * Route controller that handles GET requests for a vehicles information.
  * Sends to the client an object that contains the following:
- *   vin, color, door count, and drive train.
+ *   `vin`, `color`, `door count`, and `drive train`.
+ * Controller sends a POST request to the GM API as per GM specifications.
  * @param {{ params: { id: number } }} req
  * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res
  */
@@ -64,10 +65,9 @@ function vehicleInfo(req, res) {
 };
 
 /**
- * Receives the GET request from the GM API and resolves
+ * Promise that receives a GM API reponse and resolves
  * a formatted object to send to the client.
- * @param { Promise } response 
- * @return { Promise }
+ * @param {{ status: string, data: { vin: { value: string }, color: { value: string }, doorCount:{ value: string }, driveTrain:{ value: string }} }} response 
  */
 function processGMVehicleInfoData(response) {
   console.log('processing...\nresponse status:', response.status);
@@ -90,7 +90,7 @@ function processGMVehicleInfoData(response) {
 }
 
 /**
- * Parses response object sent from the GM API;
+ * Function that parses them response object sent from the GM API.
  * returns the door count.
  * @param {{ fourDoorSedan: { value: string }, twoDoorCoupe: { value: string } }} data
  */
