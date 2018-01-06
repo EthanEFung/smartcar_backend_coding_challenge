@@ -2,27 +2,15 @@ const Promise = require('promise-polyfill');
 const fetchGMData = require('../../helpers/fetchGMData');
 const handleGMErrors = require('../../helpers/handleGMErrors');
 
-// //request from client
-// should receive a GET request from the client
-// should receive the id of the client in the params
-
-// //request to GM
-// should send a POST request to GM
-// should specify the clients id in the request body
-// should specify a responseType of "JSON" in the request body
-
-// //response from GM
-// should receive a response object from GM API
-// should contain a data object
-// should have a tankLevel in the data object
-// should have a batteryLevel in the data object
-// should have a value specified for the tankLevel and the batteryLevel
-
-// //response to client
-// should send a response back to the client
-// should send the percentage of battery left
-// should send an object
-
+/**
+ * Controller that receives GET request for battery percentage from the client.
+ * The `req` that is provided contains an `id` in its params.
+ * Controller sends a POST request to GM according to GM specifications.
+ * This controller then sends to the client via the `res` stream
+ * a JSON object containing the percentage of battery left.
+ * @param {{ params : {id: number} }} req 
+ * @param {{ send: function }} res 
+ */
 function batteryRange(req, res) {
   try {
     console.log(`request has been made for vehicle #${req.params.id} fuel range`)
@@ -50,6 +38,11 @@ function batteryRange(req, res) {
   }
 }
 
+/**
+ * Promise that receives response from GM API regarding battery life.
+ * Resolves with relevant information having been parsed.
+ * @param {{ data: { batteryLevel: { value: string } }}} response 
+ */
 function processGMBatteryRangeData(response) {
   console.log('processing...');
   return new Promise((resolve, reject) => {
@@ -66,6 +59,5 @@ function processGMBatteryRangeData(response) {
     }
   });
 }
-
 
 module.exports = { batteryRange, processGMBatteryRangeData };
