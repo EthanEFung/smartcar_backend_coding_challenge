@@ -1,7 +1,6 @@
 const Promise = require('promise-polyfill');
 const fetchGMData = require('../../helpers/fetchGMData');
 const handleGMErrors = require('../../helpers/handleGMErrors');
-const handleErrors = require('../../helpers/handleErrors');
 
 // //request from client
 // it should receive a GET request from the client

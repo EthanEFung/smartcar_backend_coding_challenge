@@ -34,7 +34,6 @@ function fuelRange(req, res) {
         responseType: 'JSON'
       })
     }
-
     fetchGMData(path, init, req.params.id)
       .then(processGMFuelRangeData)
       .then(data => res.send(data))
@@ -45,7 +44,7 @@ function fuelRange(req, res) {
       status: 500,
       error: 'Internal Error:\n' + e
     }
-    res.send(internalErr)
+    res.send(internalErr);
     throw internalErr;
   }
 }
