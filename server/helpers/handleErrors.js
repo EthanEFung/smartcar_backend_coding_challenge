@@ -1,8 +1,11 @@
 /**
+ * STILL IN BETA & BUGGY CURRENTLY DEPRECATED
  * An internal error handler. Provide this function with a `res`
  * response stream to send to clients, and a `callback` that performs
  * the desired processes. Upon an error, this function sends notification
  * to the client, and throws an error for internal use.
+ * 
+ * Notification will be made when error handler is production ready
  * @param {{ send: function }} res 
  * @param {function} callback 
  */
@@ -15,7 +18,7 @@ function handleErrors(res, callback) {
       status: 500,
     };
     res.send(internalErr);
-    throw 'Internal Error:\n' + e;
+    throw internalErr;
   }
 }
 
