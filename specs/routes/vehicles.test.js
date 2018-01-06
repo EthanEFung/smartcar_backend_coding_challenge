@@ -93,11 +93,14 @@ describe('the vehicle router', () => {
 
     //request to GM
     it('should send a POST request to GM');
-    it('should request given action');
+    it('should send the id in the body of the request to GM');
+    it('should send the "command" in the body of the request to GM');
+    it('should send the "responseType" as JSON in the body of the request to GM');
 
     //response from GM
     it('should receive a response from GM API');
-    it('should receive a status of the cars engine');
+    it('should receive an "actionResult" JSON object');
+    it('should contain a status of the cars engine in the actionResult');
 
     //response to client
     it('should send a response back to the client');
