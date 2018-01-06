@@ -10,7 +10,7 @@ const fetch = require('node-fetch');
  * @return { Promise }
  */
 function fetchGMData(path, init, id) {
-  console.log('fetching...')
+  console.log('fetching...');
   return new Promise((resolve, reject) => {
     fetch(path, init)
       .then(res => res.json())
