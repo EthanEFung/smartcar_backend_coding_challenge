@@ -46,12 +46,16 @@ describe('the vehicle router', () => {
     it('should receive the id of the client in the params');
 
     //request to GM
-    it('should send a request to GM');
-    it('should request the percentage of fuel left');
+    it('should send a POST request to GM');
+    it('should specify the clients id in the request body')
+    it('should specify a responseType of "JSON" in the request body');
 
     //response from GM
-    it('should receive a response from GM API');
-    it('should receive the percentage of fuel left from GM');
+    it('should receive a response object from GM API');
+    it('should contain a data object');
+    it('should have a tankLevel in the data object');
+    it('should have a batteryLevel in  the data object');
+    it('should have a value specified for the tankLevel and the batteryLevel')
 
     //response to client
     it('should send a response back to the client');
@@ -65,12 +69,16 @@ describe('the vehicle router', () => {
     it('should receive the id of the client in the params');
 
     //request to GM
-    it('should send a request to GM');
-    it('should request the percentage of battery left');
+    it('should send a POST request to GM');
+    it('should specify the clients id in the request body')
+    it('should specify a responseType of "JSON" in the request body');
 
     //response from GM
-    it('should receive a response from GM API');
-    it('should receive the percentage of battery left from GM');
+    it('should receive a response object from GM API');
+    it('should contain a data object');
+    it('should have a tankLevel in the data object');
+    it('should have a batteryLevel in  the data object');
+    it('should have a value specified for the tankLevel and the batteryLevel')
 
     //response to client
     it('should send a response back to the client');
