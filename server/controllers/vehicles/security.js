@@ -100,4 +100,9 @@ function processLockedStatus(door) {
   return door.locked.value === 'True';
 }
 
-module.exports = security;
+module.exports = {
+  security,
+  fetchGMSecurityData,
+  processGMSecurityData,
+  processLockedStatus
+};

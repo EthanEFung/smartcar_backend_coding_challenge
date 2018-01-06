@@ -119,4 +119,9 @@ function determineDoorCount(data) {
   }
 }
 
-module.exports = { vehicleInfo, fetchGMVehicleInfo, processGMData, determineDoorCount };
+module.exports = {
+  vehicleInfo,
+  fetchGMVehicleInfo,
+  processGMData,
+  determineDoorCount
+};
