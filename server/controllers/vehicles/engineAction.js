@@ -64,7 +64,6 @@ function processGMEngineActionData(response) {
   console.log(`processing...\nresponse from general motors: ${response.status}`);
   return new Promise((resolve, reject) => {
     try {
-      handleGMErrors(response);
       const { status } = response.actionResult;
       resolve({
         action: parseEngineActionResponse(status)
