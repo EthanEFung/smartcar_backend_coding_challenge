@@ -2,27 +2,15 @@ const Promise = require('promise-polyfill');
 const fetchGMData = require('../../helpers/fetchGMData');
 const handleGMErrors = require('../../helpers/handleGMErrors');
 
-// Specifications:
-// //request from client
-// should receive a POST request from the client
-// should receive the "action" of the client in the request body
-
-// //request to GM
-// should send a POST request to GM
-// should send the id in the body of the request to GM
-// should send the "command" in the body of the request to GM
-// should send the "responseType" as JSON in the body of the request to GM
-
-// //response from GM
-// should receive a response from GM API
-// should receive an "actionResult" JSON object
-// should contain a status of the cars engine in the actionResult
-
-// //response to client
-// should send a response back to the client
-// should send a status of the cars engine
-// should send an object
-
+/**
+ * Controller that receives POST requests from a specific client
+ * specified as an `id` in the URL parameters. Requires a `action` statement
+ * of `START` or `STOP` specified in the `req`'s `body`. Sends a POST request to the GM API. 
+ * Sends back to the client via the `res` parameter's `send` 
+ * method a JSON object detailing`success` or `error` as a `status`.
+ * @param {{ params: { id: number }, body: { action: string }}} req 
+ * @param {{ send: function }} res 
+ */
 function engineAction(req, res) {
   try {
     console.log(`request has been made for vehicle #${req.params.id} engine action`);
@@ -47,6 +35,12 @@ function engineAction(req, res) {
   }
 }
 
+/**
+ * Parses the clients action and renders `START_VEHICLE` or `STOP_VEHICLE`,
+ * as specified for the GM API.
+ * @param {string} action 
+ * @return {string}
+ */
 function parseEngineActionRequest(action) {
   try {
     if (action === 'START') return 'START_VEHICLE';
@@ -60,13 +54,20 @@ function parseEngineActionRequest(action) {
   }
 }
 
+/**
+ * Promise that receives a GM API response that contains
+ * a `status` in the `actionResult` object.
+ * Resolves an object with a `status` formatted according
+ * to smart car specifications.
+ * @param {{status: string, actionResult: { status: string }}} response 
+ */
 function processGMEngineActionData(response) {
   console.log(`processing...\nresponse from general motors: ${response.status}`);
   return new Promise((resolve, reject) => {
     try {
       const { status } = response.actionResult;
       resolve({
-        action: parseEngineActionResponse(status)
+        status: parseEngineActionResponse(status)
       });
       console.log('OK: sending JSON to client');
     } catch (e) {
@@ -76,6 +77,12 @@ function processGMEngineActionData(response) {
   });
 }
 
+/**
+ * Parses the actionResult `status` attribute sent as a response from GM
+ * into a status in accordance to smartcar specifications.
+ * @param {string} status 
+ * @return {string} status
+ */
 function parseEngineActionResponse(status) {
   try {
     if (status === 'EXECUTED') return 'success';
