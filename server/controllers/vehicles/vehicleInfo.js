@@ -37,7 +37,7 @@ const handleErrors = require('../../helpers/handleErrors');
  * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res
  */
 function vehicleInfo(req, res) {
-  handleErrors(res, function () {
+  try {
     console.log(`received request for vehicle #${req.params.id} info`);
     const path = `https://gmapi.azurewebsites.net/getVehicleInfoService`;
     const init = {
@@ -54,7 +54,14 @@ function vehicleInfo(req, res) {
       .then(processGMVehicleInfoData)
       .then(data => res.send(data))
       .catch(err => res.send(err));
-  });
+  } catch (e) {
+    const internalErr = {
+      client_message: 'Error on our end! We need to update our server to our chagrin.',
+      status: 500,
+    };
+    res.send(internalErr);
+    throw internalErr;
+  }
 };
 
 /**
