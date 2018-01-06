@@ -10,7 +10,7 @@ describe('the vehicle router', () => {
     it('should send a color');
     it('should send a doorCount');
     it('should send a driveTrain');
-    it('should send a single object')
+    it('should send a single object');
   });
 
   describe('/:id/doors', () => {
@@ -30,7 +30,7 @@ describe('the vehicle router', () => {
     it('has the "values" array nested in the doors object');
     it('has door objects for each door, which store location and locked');
     it('has a value attribute for each door location');
-    it('has a value attribute for each door\'s "locked" status')
+    it('has a value attribute for each door\'s "locked" status');
 
     //response to client
     it('should send a response back to the client');
@@ -47,7 +47,7 @@ describe('the vehicle router', () => {
 
     //request to GM
     it('should send a POST request to GM');
-    it('should specify the clients id in the request body')
+    it('should specify the clients id in the request body');
     it('should specify a responseType of "JSON" in the request body');
 
     //response from GM
@@ -55,7 +55,7 @@ describe('the vehicle router', () => {
     it('should contain a data object');
     it('should have a tankLevel in the data object');
     it('should have a batteryLevel in  the data object');
-    it('should have a value specified for the tankLevel and the batteryLevel')
+    it('should have a value specified for the tankLevel and the batteryLevel');
 
     //response to client
     it('should send a response back to the client');
@@ -70,7 +70,7 @@ describe('the vehicle router', () => {
 
     //request to GM
     it('should send a POST request to GM');
-    it('should specify the clients id in the request body')
+    it('should specify the clients id in the request body');
     it('should specify a responseType of "JSON" in the request body');
 
     //response from GM
@@ -78,7 +78,7 @@ describe('the vehicle router', () => {
     it('should contain a data object');
     it('should have a tankLevel in the data object');
     it('should have a batteryLevel in  the data object');
-    it('should have a value specified for the tankLevel and the batteryLevel')
+    it('should have a value specified for the tankLevel and the batteryLevel');
 
     //response to client
     it('should send a response back to the client');
