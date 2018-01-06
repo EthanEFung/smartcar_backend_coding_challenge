@@ -35,21 +35,29 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * @param {[{ location: string, locked: boolean }, { location: string, locked: boolean }]} res 
  */
 function security(req, res) {
-  console.log(`request has been made for vehicle #${req.params.id} security status`)
-  const path = `https://gmapi.azurewebsites.net/getSecurityStatusService`;
-  const init = {
-    headers: { 'Content-Type': 'application/json' },
-    method: 'POST',
-    body: JSON.stringify({
-      id: req.params.id,
-      responseType: 'JSON'
-    })
+  try {
+    console.log(`request has been made for vehicle #${req.params.id} security status`)
+    const path = `https://gmapi.azurewebsites.net/getSecurityStatusService`;
+    const init = {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({
+        id: req.params.id,
+        responseType: 'JSON'
+      })
+    }
+    fetchGMData(path, init, req.params.id)
+      .then(processGMSecurityData)
+      .then(data => res.send(data))
+      .catch(err => res.send(err));
+  } catch (e) {
+    const internalErr = {
+      client_message: 'Error on our end! We need to update our server to our chagrin.',
+      status: 500,
+    };
+    res.send(internalErr);
+    throw 'Internal Error:\n' + e;
   }
-
-  fetchGMData(path, init, req.params.id)
-    .then(processGMSecurityData)
-    .then(data => res.send(data))
-    .catch(err => res.send(err));
 }
 
 /**
@@ -61,7 +69,6 @@ function processGMSecurityData(response) {
   console.log('processing...\nresponse status:', response.status);
   return new Promise((resolve, reject) => {
     try {
-      handleGMErrors(response);
       const { values } = response.data.doors;
       const doors = values.map(door => {
         return {
@@ -72,8 +79,11 @@ function processGMSecurityData(response) {
       console.log('OK: sending JSON to the client');
       resolve(doors);
     } catch (e) {
-      console.log('ERR: sending GM response to the client');
-      reject(response);
+      throw {
+        client_message: 'Error on our end! We need to update our server to our chagrin.',
+        status: 500,
+        error: 'Internal Error:\n' + e
+      };
     }
   });
 }
