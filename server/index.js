@@ -9,6 +9,8 @@ const app = express();
 const port = process.env.PORT || 8000;
 const router = require('./routes/index.js');
 
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json());
 app.use(router);
 
 app.listen(port, err => {
