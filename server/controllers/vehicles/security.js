@@ -27,8 +27,8 @@ const Promise = require('promise-polyfill');
 // it should send a location for each door to the client'
 
 /**
- * A route handler that requests GM API to supply
- * the location and "locked" status of a specified cars doors
+ * A route handler that receives requests for the
+ * the locations and "locked" statuses of a specified cars doors
  * and sends to the client these points of emphasis
  * @param {{ param: { id: number } }} req 
  * @param {[{ location: string, locked: boolean }, { location: string, locked: boolean }]} res 
@@ -51,6 +51,12 @@ function security(req, res) {
     .catch(err => res.send(err));
 }
 
+/**
+ * Promise that queries the GM API for relevent client data
+ * @param {string} path 
+ * @param {{ headers: {}, method: string, body: JSON }} init 
+ * @param {number} id 
+ */
 function fetchGMSecurityData(path, init, id) {
   console.log('fetching...')
   return new Promise((resolve, reject) => {
@@ -61,6 +67,11 @@ function fetchGMSecurityData(path, init, id) {
   });
 }
 
+/**
+ * Promise that receives the GM API response, parses the
+ * data and resolves a simplified array
+ * @param {{ data: { doors: { values: [] } } }} response 
+ */
 function processGMSecurityData(response) {
   console.log('processing...');
   return new Promise((resolve, reject) => {
@@ -76,10 +87,15 @@ function processGMSecurityData(response) {
         locked: processLockedStatus(door)
       }
     });
+    console.log('OK: sending JSON to the client');
     resolve(doors);
   });
 }
 
+/**
+ * A predicate function that determines whether a given door is locked
+ * @param {{ location: { type: string, value: string }, locked: { type: string, value: string }}} door 
+ */
 function processLockedStatus(door) {
   return door.locked.value === 'True';
 }
