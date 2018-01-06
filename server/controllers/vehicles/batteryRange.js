@@ -47,7 +47,6 @@ function processGMBatteryRangeData(response) {
   console.log('processing...');
   return new Promise((resolve, reject) => {
     try {
-      handleGMErrors(response);
       const { value } = response.data.batteryLevel;
       resolve({
         percent: parseInt(value)
