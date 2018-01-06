@@ -40,12 +40,13 @@ function fuelRange(req, res) {
       .then(data => res.send(data))
       .catch(err => res.send(err));
   } catch (e) {
-    res.send({
+    const internalErr = {
       client_message: 'Error on our end! We need to update our server to our chagrin.',
       status: 500,
       error: 'Internal Error:\n' + e
-    })
-    throw e;
+    }
+    res.send(internalErr)
+    throw internalErr;
   }
 }
 
