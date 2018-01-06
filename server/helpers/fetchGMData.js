@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 /**
- * Promise that makes a GET request to the GM API.
+ * Promise that makes a POST request to the GM API.
  * Returns a promise with a GM Response.
  * To Note: GM API does not throw errors
  * @param {string} path
