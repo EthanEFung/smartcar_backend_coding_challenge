@@ -1,6 +1,7 @@
 const Promise = require('promise-polyfill');
 const fetchGMData = require('../../helpers/fetchGMData');
 const handleGMErrors = require('../../helpers/handleGMErrors');
+const handleErrors = require('../../helpers/handleErrors');
 
 // //request from client
 // it should receive a GET request from the client
@@ -36,24 +37,25 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res
  */
 function vehicleInfo(req, res) {
-  console.log(`received request for vehicle #${req.params.id} info`);
-  const path = `https://gmapi.azurewebsites.net/getVehicleInfoService`;
-  const init = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: req.params.id,
-      responseType: 'JSON'
-    })
-  };
-
-  fetchGMData(path, init, req.params.id)
-    .then(processGMVehicleInfoData)
-    .then(data => res.send(data))
-    .catch(err => res.send(err));
-}
+  handleErrors(res, function () {
+    console.log(`received request for vehicle #${req.params.id} info`);
+    const path = `https://gmapi.azurewebsites.net/getVehicleInfoService`;
+    const init = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        id: req.params.id,
+        responseType: 'JSON'
+      })
+    }
+    fetchGMData(path, init, req.params.id)
+      .then(processGMVehicleInfoData)
+      .then(data => res.send(data))
+      .catch(err => res.send(err));
+  });
+};
 
 /**
  * Receives the GET request from the GM API and resolves
@@ -65,7 +67,6 @@ function processGMVehicleInfoData(response) {
   console.log('processing...\nresponse status:', response.status);
   return new Promise((resolve, reject) => {
     try {
-      handleGMErrors(response);
       const { data } = response;
       const processedData = {
         vin: data.vin.value,
