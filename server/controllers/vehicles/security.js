@@ -79,11 +79,13 @@ function processGMSecurityData(response) {
       console.log('OK: sending JSON to the client');
       resolve(doors);
     } catch (e) {
-      throw {
+      const internalError = {
         client_message: 'Error on our end! We need to update our server to our chagrin.',
         status: 500,
         error: 'Internal Error:\n' + e
       };
+      res.send(internalError);
+      throw internalError;
     }
   });
 }
