@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const Promise = require('promise-polyfill');
 
+
 // //request from client
 // it should receive a GET request from the client
 // it should receive the id of the client in the params
@@ -31,12 +32,24 @@ const Promise = require('promise-polyfill');
  * Route controller that handles GET requests for a vehicles information.
  * Sends to the client an object that contains the following:
  *   vin, color, door count, and drive train.
- * @param {{ params: { id: number } }} req - a readable stream that contains an id param
- * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res - a writeable stream that is sent to the client
+ * @param {{ params: { id: number } }} req
+ * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res
  */
 function vehicleInfo(req, res) {
   console.log(`received request for vehicle #${req.params.id} info`);
-  fetchGMVehiclInfo(req.params.id)
+  const path = `https://gmapi.azurewebsites.net/getVehicleInfoService`;
+  const init = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      id: req.params.id,
+      responseType: 'JSON'
+    })
+  };
+
+  fetchGMVehicleInfo(path, init, req.params.id)
     .then(processGMData)
     .then(data => res.send(data))
     .catch(err => res.send(err));
@@ -46,23 +59,14 @@ function vehicleInfo(req, res) {
  * Promise that makes a GET request to the GM API.
  * Returns a promise with a GM Response.
  * To Note: GM API does not throw errors
- * @param { Promise } id 
+ * @param {string} path
+ * @param {{ headers: {}, method: string, body: JSON }} init
+ * @param {number} id 
  * @return { Promise }
  */
-function fetchGMVehiclInfo(id) {
+function fetchGMVehicleInfo(path, init, id) {
   console.log('fetching..');
   //request vehicle information from GM
-  const path = `https://gmapi.azurewebsites.net/getVehicleInfoService`;
-  const init = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      id: id,
-      responseType: 'JSON'
-    })
-  };
   return new Promise((resolve, reject) => {
     fetch(path, init)
       .then(res => res.json())
@@ -116,4 +120,4 @@ function determineDoorCount(data) {
   }
 }
 
-module.exports = vehicleInfo;
+module.exports = { vehicleInfo, fetchGMVehicleInfo, processGMData, determineDoorCount };
