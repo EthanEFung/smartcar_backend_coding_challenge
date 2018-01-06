@@ -23,6 +23,7 @@ function fetchGMData(path, init, id) {
           handleGMErrors(data);
           resolve(data);
         } catch (e) {
+          console.log('GM error');
           reject(e);
         }
       })
