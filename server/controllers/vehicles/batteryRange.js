@@ -24,21 +24,30 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
 // should send an object
 
 function batteryRange(req, res) {
-  console.log(`request has been made for vehicle #${req.params.id} fuel range`)
-  const path = `https://gmapi.azurewebsites.net/getEnergyService`;
-  const init = {
-    headers: { 'Content-Type': 'application/json' },
-    method: 'POST',
-    body: JSON.stringify({
-      id: req.params.id,
-      responseType: 'JSON'
-    })
+  try {
+    console.log(`request has been made for vehicle #${req.params.id} fuel range`)
+    const path = `https://gmapi.azurewebsites.net/getEnergyService`;
+    const init = {
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST',
+      body: JSON.stringify({
+        id: req.params.id,
+        responseType: 'JSON'
+      })
+    }
+    fetchGMData(path, init, req.params.id)
+      .then(processGMBatteryRangeData)
+      .then(data => res.send(data))
+      .catch(err => res.send(err));
+  } catch (e) {
+    const internalErr = {
+      client_message: 'Error on our end! We need to update our server to our chagrin.',
+      status: 500,
+      error: e
+    };
+    res.send(internalErr);
+    throw internalErr;
   }
-
-  fetchGMData(path, init, req.params.id)
-    .then(processGMBatteryRangeData)
-    .then(data => res.send(data))
-    .catch(err => res.send(err));
 }
 
 function processGMBatteryRangeData(response) {
