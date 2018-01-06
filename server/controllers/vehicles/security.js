@@ -26,8 +26,62 @@ const Promise = require('promise-polyfill');
 // it should send a "locked status" for each door to the client'
 // it should send a location for each door to the client'
 
+/**
+ * A route handler that requests GM API to supply
+ * the location and "locked" status of a specified cars doors
+ * and sends to the client these points of emphasis
+ * @param {{ param: { id: number } }} req 
+ * @param {[{ location: string, locked: boolean }, { location: string, locked: boolean }]} res 
+ */
 function security(req, res) {
+  console.log(`request has been made for vehicle #${req.param.id} security status`)
+  const path = `https://gmapi.azurewebsites.net/getSecurityStatusService`;
+  const init = {
+    headers: { 'Content-Type': 'application/json' },
+    method: 'POST',
+    body: JSON.stringify({
+      id: req.params.id,
+      responseType: 'JSON'
+    })
+  }
 
+  fetchGMSecurityData(path, init, req.params.id)
+    .then(processGMSecurityData)
+    .then(data => res.send(data))
+    .catch(err => res.send(err));
+}
+
+function fetchGMSecurityData(path, init, id) {
+  console.log('fetching...')
+  return new Promise((resolve, reject) => {
+    fetch(path, init)
+      .then(res => res.json())
+      .then(data => resolve(data))
+      .catch(err => reject(err));
+  });
+}
+
+function processGMSecurityData(response) {
+  console.log('processing...');
+  return new Promise((resolve, reject) => {
+    if (response.status === '400') {
+      console.log('ERROR: ', response.reason);
+      reject(response);
+    }
+    const { values } = response.data.doors;
+
+    const doors = values.map(door => {
+      return {
+        location: door.location.value,
+        locked: processLockedStatus(door)
+      }
+    });
+    resolve(doors);
+  });
+}
+
+function processLockedStatus(door) {
+  return door.locked.value === 'True';
 }
 
 module.exports = security;
