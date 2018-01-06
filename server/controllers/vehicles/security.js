@@ -1,6 +1,6 @@
-const fetch = require('node-fetch');
 const Promise = require('promise-polyfill');
-const handleGMErrors = require('../../helpers/handleGMErrors.js');
+const fetchGMData = require('../../helpers/fetchGMData');
+const handleGMErrors = require('../../helpers/handleGMErrors');
 
 // //request from client
 // it should receive a GET request from the client'
@@ -46,26 +46,10 @@ function security(req, res) {
     })
   }
 
-  fetchGMSecurityData(path, init, req.params.id)
+  fetchGMData(path, init, req.params.id)
     .then(processGMSecurityData)
     .then(data => res.send(data))
     .catch(err => res.send(err));
-}
-
-/**
- * Promise that queries the GM API for relevent client data
- * @param {string} path 
- * @param {{ headers: {}, method: string, body: JSON }} init 
- * @param {number} id 
- */
-function fetchGMSecurityData(path, init, id) {
-  console.log('fetching...')
-  return new Promise((resolve, reject) => {
-    fetch(path, init)
-      .then(res => res.json())
-      .then(data => resolve(data))
-      .catch(err => reject(err));
-  });
 }
 
 /**
@@ -104,7 +88,6 @@ function processLockedStatus(door) {
 
 module.exports = {
   security,
-  fetchGMSecurityData,
   processGMSecurityData,
   processLockedStatus
 };
