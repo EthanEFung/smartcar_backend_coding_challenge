@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const Promise = require('promise-polyfill');
+const handleGMErrors = require('../../helpers/handleGMErrors.js');
 
 // //request from client
 // it should receive a GET request from the client'
@@ -34,7 +35,7 @@ const Promise = require('promise-polyfill');
  * @param {[{ location: string, locked: boolean }, { location: string, locked: boolean }]} res 
  */
 function security(req, res) {
-  console.log(`request has been made for vehicle #${req.param.id} security status`)
+  console.log(`request has been made for vehicle #${req.params.id} security status`)
   const path = `https://gmapi.azurewebsites.net/getSecurityStatusService`;
   const init = {
     headers: { 'Content-Type': 'application/json' },
@@ -73,22 +74,23 @@ function fetchGMSecurityData(path, init, id) {
  * @param {{ data: { doors: { values: [] } } }} response 
  */
 function processGMSecurityData(response) {
-  console.log('processing...');
+  console.log('processing...\nresponse status:', response.status);
   return new Promise((resolve, reject) => {
-    if (response.status === '400') {
-      console.log('ERROR: ', response.reason);
+    try {
+      handleGMErrors(response);
+      const { values } = response.data.doors;
+      const doors = values.map(door => {
+        return {
+          location: door.location.value,
+          locked: processLockedStatus(door)
+        }
+      });
+      console.log('OK: sending JSON to the client');
+      resolve(doors);
+    } catch (e) {
+      console.log('ERR: sending GM response to the client');
       reject(response);
     }
-    const { values } = response.data.doors;
-
-    const doors = values.map(door => {
-      return {
-        location: door.location.value,
-        locked: processLockedStatus(door)
-      }
-    });
-    console.log('OK: sending JSON to the client');
-    resolve(doors);
   });
 }
 

@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
 const Promise = require('promise-polyfill');
+const handleGMErrors = require('../../helpers/handleGMErrors');
 
 // //request from client
 // it should receive a GET request from the client
@@ -81,20 +82,23 @@ function fetchGMVehicleInfo(path, init, id) {
  * @return { Promise }
  */
 function processGMData(response) {
-  console.log('processing...');
+  console.log('processing...\nresponse status:', response.status);
   return new Promise((resolve, reject) => {
-    if (response.status === '404') {
-      return reject(response);
+    try {
+      handleGMErrors(response);
+      const { data } = response;
+      const processedData = {
+        vin: data.vin.value,
+        color: data.color.value,
+        doorCount: determineDoorCount(data),
+        driveTrain: data.driveTrain.value
+      };
+      console.log('OK: sending data to client')
+      resolve(processedData);
+    } catch (e) {
+      console.log('ERR: sending GM response to the client');
+      reject(response);
     }
-    const { data } = response;
-    const processedData = {
-      vin: data.vin.value,
-      color: data.color.value,
-      doorCount: determineDoorCount(data),
-      driveTrain: data.driveTrain.value
-    };
-    console.log('OK: sending data to client')
-    return resolve(processedData);
   });
 }
 
