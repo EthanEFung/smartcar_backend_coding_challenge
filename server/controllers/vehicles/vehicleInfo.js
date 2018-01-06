@@ -1,7 +1,6 @@
 const fetch = require('node-fetch');
 const Promise = require('promise-polyfill');
 
-
 // //request from client
 // it should receive a GET request from the client
 // it should receive the id of the client in the params
