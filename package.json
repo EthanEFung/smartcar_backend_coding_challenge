@@ -8,6 +8,11 @@
     "test:watch": "jest --watch",
     "start": "nodemon server/index.js"
   },
+  "jest": {
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/EthanEFung/smartcar_backend_coding_challenge.git"
@@ -20,9 +25,13 @@
   },
   "homepage": "https://github.com/EthanEFung/smartcar_backend_coding_challenge#readme",
   "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-jest": "^22.0.4",
+    "babel-preset-env": "^1.6.1",
     "dotenv": "^4.0.0",
     "jest": "^22.0.4",
-    "nodemon": "^1.14.7"
+    "nodemon": "^1.14.7",
+    "regenerator-runtime": "^0.11.1"
   },
   "dependencies": {
     "express": "^4.16.2",
