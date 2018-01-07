@@ -61,8 +61,7 @@ function processGMSecurityData(response) {
         status: 500,
         error: 'Internal Error:\n' + e
       };
-      res.send(internalError);
-      throw internalError;
+      reject(internalError);
     }
   });
 }
