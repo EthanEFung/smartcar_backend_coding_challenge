@@ -10,6 +10,7 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * @param {{ params: { id: number }}} req 
  * @param {{ send: function }} res 
  */
+
 function fuelRange(req, res) {
   try {
     console.log(`request has been made for vehicle #${req.params.id} fuel range`)
@@ -64,6 +65,5 @@ function processGMFuelRangeData(response) {
     }
   });
 }
-
 
 module.exports = { fuelRange, processGMFuelRangeData };
