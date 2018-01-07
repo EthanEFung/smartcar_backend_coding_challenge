@@ -1,27 +1,15 @@
 const Promise = require('promise-polyfill');
 const fetchGMData = require('../../helpers/fetchGMData');
 const handleGMErrors = require('../../helpers/handleGMErrors');
-// //request from client
-// should receive a GET request from the client
-// should receive the id of the client in the params
 
-// //request to GM
-// should send a POST request to GM
-// should specify the clients id in the request body
-// should specify a responseType of "JSON" in the request body
-
-// //response from GM
-// should receive a response object from GM API
-// should contain a data object
-// should have a tankLevel in the data object
-// should have a batteryLevel in  the data object
-// should have a value specified for the tankLevel and the batteryLevel
-
-// //response to client
-// should send a response back to the client
-// should send the percentage of fuel left
-// should send an object
-
+/**
+ * A controller that receives GET requests from a specific client specified in the
+ * `req.params` by `id`. Sends a POST request to the GM API according to their
+ * specifications, and sends back to the client a JSON object that includes the 
+ * `percent` of fuel the client has.
+ * @param {{ params: { id: number }}} req 
+ * @param {{ send: function }} res 
+ */
 function fuelRange(req, res) {
   try {
     console.log(`request has been made for vehicle #${req.params.id} fuel range`)
@@ -49,22 +37,30 @@ function fuelRange(req, res) {
   }
 }
 
+/**
+ * A Promise that receives a JSON response from the GM API.
+ * The GM response contains a `data` object with a `tankLevel`.
+ * This Promise resolves an object that contains `percent` of 
+ * fuel client has.
+ * @param {{ data: { tankLevel: { value: string } } }} response 
+ */
 function processGMFuelRangeData(response) {
   console.log('processing...');
   return new Promise((resolve, reject) => {
     try {
-      const { value } = response.data.tankLevel
+      const { value } = response.data.tankLevel;
+      console.log('OK: sending JSON to client');
       resolve({
         percent: parseInt(value)
       });
-      console.log('OK: sending JSON to client');
+
     } catch (e) {
       const internalErr = {
         client_message: 'Error on our end! We need to update our server to our chagrin.',
         status: 500,
         error: e
       };
-      throw internalErr;
+      reject(internalErr);
     }
   });
 }
