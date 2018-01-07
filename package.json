@@ -4,7 +4,8 @@
   "description": "The Generic Motors (GM) car company has a terrible API. Smartcar needs to adapt the API into a cleaner format.",
   "main": "index.js",
   "scripts": {
-    "test": "jest --watch",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "start": "nodemon server/index.js"
   },
   "repository": {
@@ -12,7 +13,7 @@
     "url": "git+https://github.com/EthanEFung/smartcar_backend_coding_challenge.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Ethan Fung",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/EthanEFung/smartcar_backend_coding_challenge/issues"
