@@ -10,10 +10,9 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * @param {{ params: { id: number }}} req 
  * @param {{ send: function }} res 
  */
-
 function fuelRange(req, res) {
   try {
-    console.log(`request has been made for vehicle #${req.params.id} fuel range`)
+    // console.log(`request has been made for vehicle #${req.params.id} fuel range`)
     const path = `https://gmapi.azurewebsites.net/getEnergyService`;
     const init = {
       headers: { 'Content-Type': 'application/json' },
@@ -46,22 +45,24 @@ function fuelRange(req, res) {
  * @param {{ data: { tankLevel: { value: string } } }} response 
  */
 function processGMFuelRangeData(response) {
-  console.log('processing...');
+  // console.log('processing...');
   return new Promise((resolve, reject) => {
     try {
       const { value } = response.data.tankLevel;
-      console.log('OK: sending JSON to client');
+      if (!value) throw 'GM format change';
+      // console.log('OK: sending JSON to client');
       resolve({
         percent: parseInt(value)
       });
 
     } catch (e) {
-      const internalErr = {
+      const internalErr = JSON.stringify({
         client_message: 'Error on our end! We need to update our server to our chagrin.',
         status: 500,
         error: e
-      };
-      reject(internalErr);
+      })
+      const err = new Error(internalErr);
+      reject(err);
     }
   });
 }
