@@ -13,7 +13,7 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  */
 function engineAction(req, res) {
   try {
-    console.log(`request has been made for vehicle #${req.params.id} engine action`);
+    // console.log(`request has been made for vehicle #${req.params.id} engine action`);
     const path = `https://gmapi.azurewebsites.net/actionEngineService`;
     const init = {
       headers: { 'Content-Type': 'application/json' },
@@ -45,7 +45,7 @@ function parseEngineActionRequest(action) {
   try {
     if (action === 'START') return 'START_VEHICLE';
     if (action === 'STOP') return 'STOP_VEHICLE';
-    throw `Bad Request: submit START or STOP as an action in the body of your JSON`;
+    throw `Bad Request: submit 'START' or 'STOP' as an action in the body of your JSON`;
   } catch (e) {
     throw {
       error: e,
@@ -58,30 +58,40 @@ function parseEngineActionRequest(action) {
  * Promise that receives a GM API response that contains
  * a `status` in the `actionResult` object.
  * Resolves an object with a `status` formatted according
- * to smart car specifications.
+ * to smart car specifications. Important: the status that
+ * is passed to the function must contain either 'START'
+ * or 'STOP', else it will not function.
  * @param {{status: string, actionResult: { status: string }}} response 
  */
 function processGMEngineActionData(response) {
-  console.log(`processing...\nresponse from general motors: ${response.status}`);
+  // console.log(`processing...\nresponse from general motors: ${response.status}`);
   return new Promise((resolve, reject) => {
     try {
       const { status } = response.actionResult;
+      if (!status) throw 'GM formatting error';
       resolve({
         status: parseEngineActionResponse(status)
       });
-      console.log('OK: sending JSON to client');
+      // console.log('OK: sending JSON to client');
     } catch (e) {
-      console.log('Err: could not processes response');
-      reject(e);
+      // console.log('Err: could not processes response');
+      const internalError = new Error(
+        JSON.stringify({
+          client_message: 'Error on our end! We need to update our server to our chagrin.',
+          error: e,
+          status: 500
+        })
+      )
+      reject(internalError);
     }
   });
 }
 
 /**
  * Parses the actionResult `status` attribute sent as a response from GM
- * into a status in accordance to smartcar specifications.
+ * into a status in accordance to smartcar specifications. 
  * @param {string} status 
- * @return {string} status
+ * @return {string} GM status
  */
 function parseEngineActionResponse(status) {
   try {
