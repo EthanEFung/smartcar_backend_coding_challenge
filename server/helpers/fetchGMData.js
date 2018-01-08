@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 const handleGMErrors = require('./handleGMErrors');
 
 /**
@@ -11,9 +10,10 @@ const handleGMErrors = require('./handleGMErrors');
  * @param {string} path
  * @param {{ headers: {}, method: string, body: JSON }} init
  * @param {number} id 
+ * @param {{}} * optional, for testing purposes, can pass in a fake fetch, defaults to node-fetch otherwise
  * @return { Promise }
  */
-function fetchGMData(path, init, id) {
+function fetchGMData(path, init, id, fetch = require('node-fetch')) {
   console.log('fetching...');
   return new Promise((resolve, reject) => {
     fetch(path, init)
