@@ -4,9 +4,13 @@ describe('batteryRange functionality', () => {
   it('should have a controller', () => {
     expect(batteryRange).toBeTruthy();
   });
+});
+
+describe('processGMBatteryRangeData', () => {
   it('should have a promise that processes GM responses', () => {
     expect(processGMBatteryRangeData).toBeTruthy();
   });
+
   it('Returns if provided with a correctly formatted response', () => {
     expect.assertions(1);
     const test = {
@@ -39,8 +43,6 @@ describe('batteryRange functionality', () => {
         expect(err).toEqual(internalErr);
       })
   });
-
-
 
   it('Returns an Error if the object doesnt have "data"', () => {
     expect.assertions(2);
@@ -102,4 +104,4 @@ describe('batteryRange functionality', () => {
         expect(err).toEqual(internalErr);
       });
   });
-});
+})

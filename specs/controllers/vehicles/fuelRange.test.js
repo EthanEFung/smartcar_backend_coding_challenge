@@ -38,8 +38,6 @@ describe('processGMFuelRangeData', () => {
       })
   });
 
-
-
   it('Returns an Error if the object doesnt have "data"', () => {
     expect.assertions(2);
     const test = { tankLevel: { value: "30" } }
