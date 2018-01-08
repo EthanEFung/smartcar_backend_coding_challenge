@@ -7,10 +7,14 @@ const handleGMErrors = require('./handleGMErrors');
  * IMPORTANT TO NOTE: GM API does not `throw` errors. Response is sent back
  * containing a status code that must be parsed and handled
  * synchronously on our servers. Use this fetch function to handle GM errors.
+ * 
+ * Optional: Testers can pass a fetch mock to limit calls to the network.
+ * Otherwise, this controller defaults to the 'node-fetch' dependency.
+ * Read about the dependency (here)[https://github.com/bitinn/node-fetch]
  * @param {string} path
  * @param {{ headers: {}, method: string, body: JSON }} init
  * @param {number} id 
- * @param {{}} * optional, for testing purposes, can pass in a fake fetch, defaults to node-fetch otherwise
+ * @param {{}} fetch optional, for testing purposes, can pass in a fake fetch, defaults to node-fetch otherwise
  * @return { Promise }
  */
 function fetchGMData(path, init, id, fetch = require('node-fetch')) {
