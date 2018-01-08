@@ -1,22 +1,6 @@
 import { fuelRange, processGMFuelRangeData } from '../../../server/controllers/vehicles/fuelRange';
 
 describe('fuelRange functionality', () => {
-  jest.mock('../../../server/helpers/fetchGMData');
-
-  it('should work'
-    // , async () => {
-    //   const fakeReq = { params: { id: 1234 } }
-    //   const fakeRes = {
-    //     cache: null,
-    //     send: (data) => fakeRes.cache = data
-    //   }
-    //   fuelRange(fakeReq, fakeRes).then(data => console.log('hi'))
-    // await expect(fakeRes.cache).toEqual({ percent: 26 })
-
-    // const test = await fuelRange(fakeReq, fakeRes)
-    // console.log(test);
-    // }
-  );
   it('should have tests');
 });
 
