@@ -44,17 +44,25 @@ function batteryRange(req, res) {
  * @param {{ data: { batteryLevel: { value: string } }}} response 
  */
 function processGMBatteryRangeData(response) {
-  console.log('processing...');
+  // console.log('processing...');
   return new Promise((resolve, reject) => {
     try {
       const { value } = response.data.batteryLevel;
+      if (!value) throw 'GM format change';
       resolve({
         percent: parseInt(value)
       });
-      console.log('OK: sending JSON to client');
+      // console.log('OK: sending JSON to client');
     } catch (e) {
-      console.log('Err: could not processes response');
-      reject(e);
+      const internalErr = new Error(
+        JSON.stringify({
+          client_message: 'Error on our end! We need to update our server to our chagrin.',
+          status: 500,
+          error: e
+        })
+      )
+      // console.log('Err: could not processes response');
+      reject(internalErr);
     }
   });
 }
