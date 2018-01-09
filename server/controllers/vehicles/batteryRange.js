@@ -7,13 +7,23 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * The `req` that is provided contains an `id` in its params.
  * Controller sends a POST request to GM according to GM specifications.
  * This controller then sends to the client via the `res` stream
- * a JSON object containing the percentage of battery left.
+ * a JSON object containing the percentage of battery left if the car
+ * is electric.  Otherwise, the percentage is null.
+ * 
+ * The 'next' parameter: this is the middleware placeholder. 
+ * No call on this function will be made.
+ * 
+ * Optionally, a mock fetch can be passed this callback for testing purposes.
+ * Controller will default to the node-fetch dependency if no fetch is specified.
+ * 
  * @param {{ params : {id: number} }} req 
  * @param {{ send: function }} res 
+ * @param {{ function }} next 
+ * @param {{ function }} fetch
  */
-function batteryRange(req, res) {
+function batteryRange(req, res, next, fetch = require('node-fetch')) {
   try {
-    console.log(`request has been made for vehicle #${req.params.id} fuel range`)
+    // console.log(`request has been made for vehicle #${req.params.id} fuel range`)
     const path = `https://gmapi.azurewebsites.net/getEnergyService`;
     const init = {
       headers: { 'Content-Type': 'application/json' },
@@ -23,7 +33,7 @@ function batteryRange(req, res) {
         responseType: 'JSON'
       })
     }
-    fetchGMData(path, init, req.params.id)
+    return fetchGMData(path, init, req.params.id, fetch)
       .then(processGMBatteryRangeData)
       .then(data => res.send(data))
       .catch(err => res.send(err));
@@ -44,12 +54,13 @@ function batteryRange(req, res) {
  */
 function processGMBatteryRangeData(response) {
   // console.log('processing...');
+  // console.log(response)
   return new Promise((resolve, reject) => {
     try {
       const { value } = response.data.batteryLevel;
       if (!value) throw 'GM format change';
       resolve({
-        percent: parseInt(value)
+        percent: parsePercent(value)
       });
       // console.log('OK: sending JSON to client');
     } catch (e) {
@@ -64,6 +75,15 @@ function processGMBatteryRangeData(response) {
       reject(internalErr);
     }
   });
+}
+
+/**
+ * function that parses response value from GM. returns either a number or null
+ * @param {string} value
+ */
+function parsePercent(value) {
+  if (value === 'null') return null;
+  return parseInt(value);
 }
 
 module.exports = { batteryRange, processGMBatteryRangeData };
