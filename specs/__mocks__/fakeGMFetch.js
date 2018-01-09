@@ -48,7 +48,7 @@ export default function fakeGMFetch(path, init) {
 }
 
 function parseId(init) {
-  if (typeof init.body !== 'string') return false;
+  if (typeof init.body !== 'string') return 'request body must be a string'
   const body = JSON.parse(init.body);
   return body.id;
 }

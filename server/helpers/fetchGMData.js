@@ -18,7 +18,7 @@ const handleGMErrors = require('./handleGMErrors');
  * @return { Promise }
  */
 function fetchGMData(path, init, id, fetch = require('node-fetch')) {
-  console.log('fetching...');
+  // console.log('fetching...');
   return new Promise((resolve, reject) => {
     fetch(path, init)
       .then(res => res.json())
@@ -27,7 +27,7 @@ function fetchGMData(path, init, id, fetch = require('node-fetch')) {
           handleGMErrors(data);
           resolve(data);
         } catch (e) {
-          console.log('GM error');
+          // console.log('GM error');
           reject(e);
         }
       })

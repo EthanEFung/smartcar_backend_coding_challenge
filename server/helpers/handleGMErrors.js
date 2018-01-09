@@ -5,6 +5,7 @@
  * @param { Promise } response 
  */
 function handleGMErrors(response) {
+  // console.log(response)
   const type = response.status[0];
   if (type >= '3' && type <= '5') {
     throw response;

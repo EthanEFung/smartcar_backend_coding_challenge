@@ -313,6 +313,6 @@ describe('fetchGMData functionality', () => {
   });
 
   it('should be tested', () => {
-    expected(true).toBe(true);
+    expect(true).toBe(true);
   }); //this should have a passing test when suite is done
 })

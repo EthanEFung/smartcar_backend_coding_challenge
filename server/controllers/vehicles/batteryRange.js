@@ -34,7 +34,6 @@ function batteryRange(req, res) {
       error: e
     };
     res.send(internalErr);
-    throw internalErr;
   }
 }
 
