@@ -1,9 +1,51 @@
 import { batteryRange, processGMBatteryRangeData } from '../../../server/controllers/vehicles/batteryRange';
+import fakeGMFetch from '../../__mocks__/fakeGMFetch';
+const fakeReq = { params: { id: 1234 } };
+const fakeRes = {
+  send: function (data) {
+    return new Promise((resolve, reject) => {
+      resolve(data);
+    })
+  }
+}
 
 describe('batteryRange functionality', () => {
   it('should have a controller', () => {
     expect(batteryRange).toBeTruthy();
   });
+
+  it('should send some data', () => {
+    expect.assertions(1);
+    return batteryRange(fakeReq, fakeRes, () => { }, fakeGMFetch)
+      .then(data => {
+        expect(data).toBeTruthy();
+      });
+  });
+
+  it('should send a proper response', () => {
+    expect.assertions(1);
+    return batteryRange(fakeReq, fakeRes, null, fakeGMFetch)
+      .then(data => {
+        expect(data).toEqual({
+          percent: null
+        });
+      });
+  });
+
+  it('should throw if the params does not have a valid id', () => {
+    expect.assertions(1);
+    return batteryRange({ params: { id: 1237 } }, fakeRes, () => { }, fakeGMFetch)
+      .then(err => {
+        const serverErr =
+          JSON.stringify({
+            "client_message": "Error on our end! We need to update our server to our chagrin.",
+            "status": 500,
+            "error": {},
+          });
+
+        expect(err).toEqual(Error(serverErr));
+      })
+  })
 });
 
 describe('processGMBatteryRangeData', () => {
@@ -23,6 +65,19 @@ describe('processGMBatteryRangeData', () => {
         expect(data).toEqual({ percent: 30 })
       });
   });
+
+  it('Returns null if passed a value of "null"', () => {
+    expect.assertions(1);
+    const test = {
+      data: {
+        batteryLevel: { value: "null" }
+      }
+    }
+    return processGMBatteryRangeData(test)
+      .then(data => {
+        expect(data).toEqual({ percent: null })
+      });
+  })
 
   it('Returns an Error if no arguments are provided', () => {
     expect.assertions(2);
