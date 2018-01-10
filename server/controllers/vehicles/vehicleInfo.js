@@ -10,7 +10,7 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * @param {{ params: { id: number } }} req
  * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res
  */
-function vehicleInfo(req, res) {
+function vehicleInfo(req, res, next, fetch = require('node-fetch')) {
   try {
     console.log(`received request for vehicle #${req.params.id} info`);
     const path = `https://gmapi.azurewebsites.net/getVehicleInfoService`;
@@ -44,23 +44,58 @@ function vehicleInfo(req, res) {
  * @param {{ status: string, data: { vin: { value: string }, color: { value: string }, doorCount:{ value: string }, driveTrain:{ value: string }} }} response 
  */
 function processGMVehicleInfoData(response) {
-  console.log('processing...\nresponse status:', response.status);
+  // console.log('processing...\nresponse status:', response.status);
   return new Promise((resolve, reject) => {
     try {
       const { data } = response;
+      if (hasMissingAttribute(data)) throw "GM format change";
       const processedData = {
         vin: data.vin.value,
         color: data.color.value,
         doorCount: determineDoorCount(data),
         driveTrain: data.driveTrain.value
       };
-      console.log('OK: sending data to client')
+      // console.log('OK: sending data to client')
       resolve(processedData);
     } catch (e) {
-      console.log('ERR: sending GM response to the client');
-      reject(response);
+      // console.log('ERR: sending GM response to the client', e);
+      const internalError = Error(JSON.stringify({
+        client_message: 'Error on our end! We need to update our server to our chagrin.',
+        status: 500,
+        error: e
+      }))
+      reject(internalError);
     }
   });
+}
+
+/**
+ * Predicate function that evaluates the data object sent from GM, and returns
+ * a boolean whether the data is missing an attribute that is needed to send 
+ * the client a satisfactory JSON object.
+ * @param {{vin:{ type: string, value: string }, color: {type: string, value: string }, fourDoorSedan: {type: string, value: string}, twoDoorCoupe: {type: string, value:string}, driveTrain: { type: string, value: string}}} data
+ * @return {boolean}
+ */
+function hasMissingAttribute(data) {
+  if (
+    !data ||
+
+    !data.vin ||
+    !data.color ||
+    !data.fourDoorSedan ||
+    !data.twoDoorCoupe ||
+    !data.driveTrain ||
+
+    !data.vin.value ||
+    !data.color.value ||
+    !data.fourDoorSedan.value ||
+    !data.twoDoorCoupe.value ||
+    !data.driveTrain.value
+
+  ) return true;
+
+  else return false;
+
 }
 
 /**
