@@ -10,7 +10,7 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * @param {{ params: { id: number }}} req 
  * @param {{ send: function }} res 
  */
-function fuelRange(req, res) {
+function fuelRange(req, res, next, fetch = require('node-fetch')) {
   try {
     // console.log(`request has been made for vehicle #${req.params.id} fuel range`)
     const path = `https://gmapi.azurewebsites.net/getEnergyService`;
@@ -22,7 +22,7 @@ function fuelRange(req, res) {
         responseType: 'JSON'
       })
     }
-    fetchGMData(path, init, req.params.id)
+    return fetchGMData(path, init, req.params.id, fetch)
       .then(processGMFuelRangeData)
       .then(data => res.send(data))
       .catch(err => res.send(err));
@@ -32,8 +32,7 @@ function fuelRange(req, res) {
       status: 500,
       error: 'Internal Error:\n' + e
     }
-    res.send(internalErr);
-    throw internalErr;
+    return res.send(internalErr);
   }
 }
 
