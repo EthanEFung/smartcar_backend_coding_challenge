@@ -4,9 +4,10 @@
   "description": "The Generic Motors (GM) car company has a terrible API. Smartcar needs to adapt the API into a cleaner format.",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon server/index.js",
     "test": "jest",
     "test:watch": "jest --watch",
-    "start": "nodemon server/index.js"
+    "start": "node server/index.js"
   },
   "jest": {
     "transform": {
