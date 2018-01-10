@@ -3,6 +3,7 @@ import GMgetVehicleInfoResponse from './GMgetVehicleInfoResponse'
 import GMgetSecurityStatusResponse from './GMgetSecurityStatusResponse';
 import GMgetEnergyServiceResponse from './GMgetEnergyServiceResponse';
 import GMactionEngineServiceResponse from './GMactionEngineServiceResponse';
+
 /**
  * A mock fetch specific when accessing data from the GM API
  * use this in conjunction with the fetchGMData function to 
@@ -17,33 +18,45 @@ export default function fakeGMFetch(path, init) {
       return new Promise((resolve, reject) => {
         const id = parseId(init);
 
-        //GM's error responses (does not throw) only resolves
-        if (!hasValidPath(path)) resolve(new GMError(`invalid path: ${path}`));
-        if (!hasHeaders(init)) resolve(new GMError(`no headers provided`));
-        if (!hasValidInit(init)) resolve(new GMError(`invalid init: ${JSON.stringify(init)}`));
-        if (!hasValidID(id)) resolve(new GMError(`invalid id: ${id}`));
-        if (!requestsResponseType(init)) resolve(new GMError(`request responseType ${init.body}, OPTIONS: ["JSON"]`));
-
+        //GM's error responses
+        if (!hasValidPath(path)) {
+          return resolve(new GMError(`invalid path: ${path}`));
+        }
+        if (!hasHeaders(init)) {
+          return resolve(new GMError(`no headers provided`));
+        }
+        if (!hasValidInit(init)) {
+          return resolve(new GMError(`invalid init: ${JSON.stringify(init)}`));
+        }
+        if (!hasValidID(id)) {
+          const error = { "reason": "Vehicle id: " + id + " not found.", "status": "404" };
+          return resolve(error);
+        }
+        if (!requestsResponseType(init)) {
+          return resolve(new GMError(`request responseType ${init.body}, OPTIONS: ["JSON"]`));
+        }
         //path specific responses
         if (path === `https://gmapi.azurewebsites.net/getVehicleInfoService`) {
-          resolve(GMgetVehicleInfoResponse);
+          return resolve(GMgetVehicleInfoResponse);
         }
         if (path === `https://gmapi.azurewebsites.net/getSecurityStatusService`) {
-          resolve(GMgetSecurityStatusResponse)
+          return resolve(GMgetSecurityStatusResponse)
         }
         if (path === `https://gmapi.azurewebsites.net/getEnergyService`) {
-          resolve(GMgetEnergyServiceResponse);
+          return resolve(GMgetEnergyServiceResponse);
         }
         if (path === `https://gmapi.azurewebsites.net/actionEngineService`) {
-          if (!hasValidAction(init)) resolve(new GMError(`must provide valid action`));
-          resolve(GMactionEngineServiceResponse);
+          if (!hasValidAction(init)) {
+            return resolve(new GMError(`must provide valid action`));
+          }
+          return resolve(GMactionEngineServiceResponse);
         }
 
-        resolve('The mock GM fetch needs an update, contact QA to notify');
+        return resolve('The mock GM fetch needs an update, contact QA to notify');
       })
     }
 
-    resolve(data);
+    return resolve(data);
   });
 }
 
@@ -91,3 +104,4 @@ function hasValidAction(init) {
   if (!body.command) return false;
   return body.command === 'START_VEHICLE' || body.command === 'STOP_VEHICLE';
 }
+
