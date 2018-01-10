@@ -41,7 +41,6 @@ describe('engineAction functionality', () => {
       });
   });
 
-  it('should throw if an invalid action is provided')
 });
 
 describe('parseEngineActionRequest', () => {
