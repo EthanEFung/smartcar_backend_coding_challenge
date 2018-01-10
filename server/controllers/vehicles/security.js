@@ -11,9 +11,9 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * @param {{ param: { id: number } }} req 
  * @param {{ send: function }} res 
  */
-function security(req, res) {
+function security(req, res, next, fetch = require('node-fetch')) {
   try {
-    console.log(`request has been made for vehicle #${req.params.id} security status`)
+    // console.log(`request has been made for vehicle #${req.params.id} security status`)
     const path = `https://gmapi.azurewebsites.net/getSecurityStatusService`;
     const init = {
       headers: { 'Content-Type': 'application/json' },
@@ -23,7 +23,8 @@ function security(req, res) {
         responseType: 'JSON'
       })
     }
-    fetchGMData(path, init, req.params.id)
+
+    return fetchGMData(path, init, req.params.id, fetch)
       .then(processGMSecurityData)
       .then(data => res.send(data))
       .catch(err => res.send(err));
@@ -32,7 +33,7 @@ function security(req, res) {
       client_message: 'Error on our end! We need to update our server to our chagrin.',
       status: 500,
     };
-    res.send(internalErr);
+    return res.send(internalErr);
     throw 'Internal Error:\n' + e;
   }
 }
@@ -43,7 +44,6 @@ function security(req, res) {
  * @param {{ data: { doors: { values: [] } } }} response 
  */
 function processGMSecurityData(response) {
-  console.log('processing...\nresponse status:', response.status);
   return new Promise((resolve, reject) => {
     try {
       const { values } = response.data.doors;
@@ -53,14 +53,13 @@ function processGMSecurityData(response) {
           locked: processLockedStatus(door)
         }
       });
-      console.log('OK: sending JSON to the client');
       resolve(doors);
     } catch (e) {
-      const internalError = {
+      const internalError = Error(JSON.stringify({
         client_message: 'Error on our end! We need to update our server to our chagrin.',
         status: 500,
-        error: 'Internal Error:\n' + e
-      };
+        error: e
+      }))
       reject(internalError);
     }
   });
