@@ -1,13 +1,6 @@
 import { batteryRange, processGMBatteryRangeData } from '../../../server/controllers/vehicles/batteryRange';
 import fakeGMFetch from '../../__mocks__/fakeGMFetch';
-const fakeReq = { params: { id: 1234 } };
-const fakeRes = {
-  send: function (data) {
-    return new Promise((resolve, reject) => {
-      resolve(data);
-    })
-  }
-}
+import { fakeReq, fakeRes } from '../../__mocks__/fakeStreams';
 
 describe('batteryRange functionality', () => {
   it('should have a controller', () => {
@@ -36,14 +29,8 @@ describe('batteryRange functionality', () => {
     expect.assertions(1);
     return batteryRange({ params: { id: 1237 } }, fakeRes, () => { }, fakeGMFetch)
       .then(err => {
-        const serverErr =
-          JSON.stringify({
-            "client_message": "Error on our end! We need to update our server to our chagrin.",
-            "status": 500,
-            "error": {},
-          });
-
-        expect(err).toEqual(Error(serverErr));
+        const serverErr = { "reason": "Vehicle id: 1237 not found.", "status": "404" }
+        expect(err).toEqual(serverErr);
       })
   })
 });
