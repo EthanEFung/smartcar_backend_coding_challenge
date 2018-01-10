@@ -80,4 +80,4 @@ Unit tests are built using Jest, and uses a mock fetch to the GM API. This is do
 the amount of network requests made during development.
 
 ## Prompt
-This repository is a response to a coding challenge. Read the prompt [here]('/prompt.md').
+This repository is a response to a coding challenge. Read the prompt [here](prompt.md).
