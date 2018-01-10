@@ -35,8 +35,6 @@ describe('vehicleInfo functionality', () => {
   });
 
   it('should throw if the params does not have a valid id', () => {
-
-
     expect.assertions(1);
     return vehicleInfo({ params: { id: 1237 } }, fakeRes, null, fakeGMFetch)
       .then(err => {

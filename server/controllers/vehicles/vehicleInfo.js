@@ -12,7 +12,7 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  */
 function vehicleInfo(req, res, next, fetch = require('node-fetch')) {
   try {
-    console.log(`received request for vehicle #${req.params.id} info`);
+    // console.log(`received request for vehicle #${req.params.id} info`);
     const path = `https://gmapi.azurewebsites.net/getVehicleInfoService`;
     const init = {
       method: 'POST',
