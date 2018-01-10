@@ -10,7 +10,9 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * a JSON object containing the percentage of battery left if the car
  * is electric.  Otherwise, the percentage is null.
  * 
- * The 'next' parameter: this is the middleware placeholder. 
+ * The 'next' parameter: this is the middleware placeholder as detailed in the
+ * express.js documentation. You can learn about passing middleware functions
+ * to route handlers, in the "Route Handlers" section: "http://expressjs.com/en/guide/routing.html"
  * No call on this function will be made.
  * 
  * Optionally, a mock fetch can be passed this callback for testing purposes.

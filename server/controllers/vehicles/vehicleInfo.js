@@ -7,8 +7,19 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * Sends to the client an object that contains the following:
  *   `vin`, `color`, `door count`, and `drive train`.
  * Controller sends a POST request to the GM API as per GM specifications.
+ * 
+ * The 'next' parameter: this is the middleware placeholder as detailed in the
+ * express.js documentation. You can learn about passing middleware functions
+ * to route handlers, in the "Route Handlers" section: "http://expressjs.com/en/guide/routing.html"
+ * No call on this function will be made.
+ *
+ * Optionally, a mock fetch can be passed this callback for testing purposes.
+ * Controller will default to the node-fetch dependency if no fetch is specified.
+ * 
  * @param {{ params: { id: number } }} req
  * @param {{ body: { vin: string, color: string, doorCount: number, driveTrain: string } }} res
+ * @param {{ function }} next
+ * @param {{ function }} fetch
  */
 function vehicleInfo(req, res, next, fetch = require('node-fetch')) {
   try {

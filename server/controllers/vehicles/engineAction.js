@@ -10,13 +10,18 @@ const { badRequest } = require('../../helpers/ErrorResponses');
  * Sends back to the client via the `res` parameter's `send` 
  * method a JSON object detailing`success` or `error` as a `status`.
  * 
- * The 'next' parameter: this is the middleware placeholder.
+ * The 'next' parameter: this is the middleware placeholder as detailed in the
+ * express.js documentation. You can learn about passing middleware functions
+ * to route handlers, in the "Route Handlers" section: "http://expressjs.com/en/guide/routing.html"
  * No call on this function will be made.
  *
  * Optionally, a mock fetch can be passed this callback for testing purposes.
  * Controller will default to the node-fetch dependency if no fetch is specified.
+ * 
  * @param {{ params: { id: number }, body: { action: string }}} req 
  * @param {{ send: function }} res 
+ * @param {{ function }} next
+ * @param {{ function }} fetch
  */
 function engineAction(req, res, next, fetch = require('node-fetch')) {
   try {

@@ -8,8 +8,19 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * and sends via the `res` parameter's `send` method a JSON array 
  * of objects containing these door statuses to the client.
  * Controller sends GM a POST request as detailed in GM specifications.
+ * 
+ * The 'next' parameter: this is the middleware placeholder as detailed in the
+ * express.js documentation. You can learn about passing middleware functions
+ * to route handlers, in the "Route Handlers" section: "http://expressjs.com/en/guide/routing.html"
+ * No call on this function will be made.
+ *
+ * Optionally, a mock fetch can be passed this callback for testing purposes.
+ * Controller will default to the node-fetch dependency if no fetch is specified.
+ * 
  * @param {{ param: { id: number } }} req 
  * @param {{ send: function }} res 
+ * @param {{ function }}  next
+ * @param {{ function }} fetch
  */
 function security(req, res, next, fetch = require('node-fetch')) {
   try {
