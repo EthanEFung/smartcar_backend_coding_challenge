@@ -5,8 +5,43 @@ import {
   processGMEngineActionData
 } from '../../../server/controllers/vehicles/engineAction';
 
+import { fakeReq, fakeRes } from '../../__mocks__/fakeStreams';
+import fakeGMFetch from '../../__mocks__/fakeGMFetch';
+
+import { badRequest } from '../../../server/helpers/ErrorResponses';
+
 describe('engineAction functionality', () => {
-  it('should be tested');
+  it('should have a controller', () => {
+    expect(engineAction).toBeTruthy();
+  });
+
+  it('should send some data', () => {
+    expect.assertions(1);
+    return engineAction(fakeReq, fakeRes, () => { }, fakeGMFetch)
+      .then(data => {
+        expect(data).toBeTruthy();
+      })
+  });
+
+  it('should send a proper response', () => {
+    expect.assertions(1);
+    return engineAction(fakeReq, fakeRes, null, fakeGMFetch)
+      .then(data => {
+        expect(data).toEqual({
+          status: 'success'
+        });
+      });
+  });
+
+  it('should throw if the params does not have a valid id', () => {
+    expect.assertions(1);
+    return engineAction({ params: { id: 1237 }, body: { action: 'START' } }, fakeRes, () => { }, fakeGMFetch)
+      .then(err => {
+        expect(err).toEqual({ status: '404', reason: 'Vehicle id: 1237 not found.' });
+      });
+  });
+
+  it('should throw if an invalid action is provided')
 });
 
 describe('parseEngineActionRequest', () => {
@@ -23,10 +58,7 @@ describe('parseEngineActionRequest', () => {
     try {
       parseEngineActionRequest('START ');
     } catch (e) {
-      expect(e).toEqual({
-        error: "Bad Request: submit 'START' or 'STOP' as an action in the body of your JSON",
-        status: 400
-      });
+      expect(e).toEqual(badRequest);
     }
   });
 });
@@ -36,6 +68,8 @@ describe('processGMEngineActionData', () => {
     expect.assertions(2);
 
     const test = {
+      service: 'actionEngine',
+      status: '200',
       actionResult: {
         status: 'EXECUTED'
       }
@@ -45,6 +79,8 @@ describe('processGMEngineActionData', () => {
       .then(data => expect(data).toEqual({ status: 'success' }))
 
     const test2 = {
+      service: 'actionEngine',
+      status: '200',
       actionResult: {
         status: 'FAILED'
       }
@@ -135,12 +171,14 @@ describe('processGMEngineActionData', () => {
     const internalErr = new Error(
       JSON.stringify({
         "client_message": "Error on our end! We need to update our server to our chagrin.",
-        "error": `GM formatting error`,
+        "error": "status needs to be updated to support \"undefined\"",
         "status": 500
       })
     )
 
     return processGMEngineActionData({
+      service: 'actionEngine',
+      status: '400',
       actionResult: {
         type: "String"
       }
@@ -162,11 +200,7 @@ describe('parseEngineActionResponse', () => {
     try {
       parseEngineActionResponse('EXECUTEDS');
     } catch (e) {
-      expect(e).toEqual({
-        client_message: 'Error on our end! We need to update our server to our chagrin.',
-        status: 500,
-        error: `status needs to be updated to support "EXECUTEDS"`
-      });
+      expect(e).toEqual(`status needs to be updated to support "EXECUTEDS"`);
     }
   });
 })
