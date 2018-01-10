@@ -11,10 +11,11 @@ with a specified PORT. For example:
 PORT=3000
 ```
 
-Be sure to install and check to make sure that the version that is 
+Be sure to install and check to make sure that the version of node that is 
 run is 8.9.4. In the command line, you can run `node -v` to check.
 If node is already installed, and the version is greater than 8.9.4.,
-you can update your version by running `nvm install 8.9.4`
+you can update your version by running `nvm install 8.9.4`. A 
+notification should appear that notifies that version being used is 8.9.4
 
 Node comes prepackaged with node package manager.
 
@@ -25,7 +26,7 @@ npm start
 ```
 
 In the browser or via Postman, you can check the routes.  Documentation of 
-valid routes are found (here)[https://documenter.getpostman.com/view/2423531/smartcar_backend_challenge/7Lt6KwP]
+valid routes are found [here](https://documenter.getpostman.com/view/2423531/smartcar_backend_challenge/7Lt6KwP)
 
 ## File Structure
 
@@ -54,6 +55,7 @@ The layout of this repository is as follows
 Unit tests have been created to cover the main functionality of the 
 controllers and helpers 
 ```
+{ specs }
 ---- { __mocks__ } 
 ---- { controllers }
 -------- { vehicles }
