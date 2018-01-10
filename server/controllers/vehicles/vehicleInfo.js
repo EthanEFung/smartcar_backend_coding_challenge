@@ -24,7 +24,7 @@ function vehicleInfo(req, res, next, fetch = require('node-fetch')) {
         responseType: 'JSON'
       })
     }
-    fetchGMData(path, init, req.params.id, fetch)
+    return fetchGMData(path, init, req.params.id, fetch)
       .then(processGMVehicleInfoData)
       .then(data => res.send(data))
       .catch(err => res.send(err));
@@ -33,8 +33,8 @@ function vehicleInfo(req, res, next, fetch = require('node-fetch')) {
       client_message: 'Error on our end! We need to update our server to our chagrin.',
       status: 500,
     };
-    res.send(internalErr);
-    throw internalErr;
+    return res.send(internalErr);
+
   }
 };
 
