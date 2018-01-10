@@ -1,7 +1,41 @@
 import { fuelRange, processGMFuelRangeData } from '../../../server/controllers/vehicles/fuelRange';
 
+import { fakeReq, fakeRes } from '../../__mocks__/fakeStreams';
+import fakeGMFetch from '../../__mocks__/fakeGMFetch';
+import GMgetEnergyServiceResponse from '../../__mocks__/GMgetEnergyServiceResponse';
+
+import { badRequest } from '../../../server/helpers/ErrorResponses';
+
 describe('fuelRange functionality', () => {
-  it('should have tests');
+
+  it('should have a controller', () => {
+    expect.assertions(1);
+    expect(fuelRange).toBeTruthy();
+  });
+
+  it('should send some data', () => {
+    expect.assertions(1);
+    return fuelRange(fakeReq, fakeRes, null, fakeGMFetch)
+      .then(data => {
+        expect(data).toBeTruthy();
+      })
+  });
+
+  it('should send a proper response', () => {
+    expect.assertions(1);
+    return fuelRange(fakeReq, fakeRes, null, fakeGMFetch)
+      .then(data => {
+        expect(data).toEqual({ "percent": 10 });
+      });
+  });
+
+  it('should throw if the params does not have a valid id', () => {
+    expect.assertions(1);
+    return fuelRange({ params: { id: 1237 } }, fakeRes, null, fakeGMFetch)
+      .then(err => {
+        expect(err).toEqual({ status: '404', reason: 'Vehicle id: 1237 not found.' });
+      })
+  });
 });
 
 describe('processGMFuelRangeData', () => {
