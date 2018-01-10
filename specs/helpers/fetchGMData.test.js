@@ -305,7 +305,7 @@ describe('fetchGMData functionality', () => {
           "service": "actionEngine",
           "status": "200",
           "actionResult": {
-            "status": "EXECUTED|FAILED"
+            "status": "EXECUTED"
           }
         })
       })
