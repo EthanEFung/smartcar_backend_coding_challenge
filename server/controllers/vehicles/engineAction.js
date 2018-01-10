@@ -1,6 +1,7 @@
 const Promise = require('promise-polyfill');
 const fetchGMData = require('../../helpers/fetchGMData');
 const handleGMErrors = require('../../helpers/handleGMErrors');
+const { badRequest } = require('../../helpers/ErrorResponses');
 
 /**
  * Controller that receives POST requests from a specific client
@@ -8,10 +9,16 @@ const handleGMErrors = require('../../helpers/handleGMErrors');
  * of `START` or `STOP` specified in the `req`'s `body`. Sends a POST request to the GM API. 
  * Sends back to the client via the `res` parameter's `send` 
  * method a JSON object detailing`success` or `error` as a `status`.
+ * 
+ * The 'next' parameter: this is the middleware placeholder.
+ * No call on this function will be made.
+ *
+ * Optionally, a mock fetch can be passed this callback for testing purposes.
+ * Controller will default to the node-fetch dependency if no fetch is specified.
  * @param {{ params: { id: number }, body: { action: string }}} req 
  * @param {{ send: function }} res 
  */
-function engineAction(req, res) {
+function engineAction(req, res, next, fetch = require('node-fetch')) {
   try {
     // console.log(`request has been made for vehicle #${req.params.id} engine action`);
     const path = `https://gmapi.azurewebsites.net/actionEngineService`;
@@ -24,14 +31,20 @@ function engineAction(req, res) {
         command: parseEngineActionRequest(req.body.action)
       })
     };
-    fetchGMData(path, init, req.params.id)
+    return fetchGMData(path, init, req.params.id, fetch)
       .then(processGMEngineActionData)
-      .then(data => res.send(data))
+      .then(data => {
+        // console.log('doesnt error', data)
+        return res.send(data)
+      })
       .catch(err => {
-        res.send(err);
+        // console.log('errors', err)
+        return res.send(err)
       });
+
   } catch (e) {
-    res.send(e);
+    // console.log('errors?', e);
+    return res.send(e);
   }
 }
 
@@ -42,16 +55,9 @@ function engineAction(req, res) {
  * @return {string}
  */
 function parseEngineActionRequest(action) {
-  try {
-    if (action === 'START') return 'START_VEHICLE';
-    if (action === 'STOP') return 'STOP_VEHICLE';
-    throw `Bad Request: submit 'START' or 'STOP' as an action in the body of your JSON`;
-  } catch (e) {
-    throw {
-      error: e,
-      status: 400
-    }
-  }
+  if (action === 'START') return 'START_VEHICLE';
+  if (action === 'STOP') return 'STOP_VEHICLE';
+  throw badRequest;
 }
 
 /**
@@ -68,7 +74,7 @@ function processGMEngineActionData(response) {
   return new Promise((resolve, reject) => {
     try {
       const { status } = response.actionResult;
-      if (!status) throw 'GM formatting error';
+
       resolve({
         status: parseEngineActionResponse(status)
       });
@@ -94,17 +100,9 @@ function processGMEngineActionData(response) {
  * @return {string} GM status
  */
 function parseEngineActionResponse(status) {
-  try {
-    if (status === 'EXECUTED') return 'success';
-    if (status === 'FAILED') return 'error';
-    throw `status needs to be updated to support "${status}"`;
-  } catch (e) {
-    throw {
-      client_message: 'Error on our end! We need to update our server to our chagrin.',
-      status: 500,
-      error: e
-    };
-  }
+  if (status === 'EXECUTED') return 'success';
+  if (status === 'FAILED') return 'error';
+  throw `status needs to be updated to support "${status}"`
 }
 
 module.exports = {
