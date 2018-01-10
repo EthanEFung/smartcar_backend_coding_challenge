@@ -43,7 +43,7 @@ function batteryRange(req, res, next, fetch = require('node-fetch')) {
       status: 500,
       error: e
     };
-    res.send(internalErr);
+    return res.send(internalErr);
   }
 }
 
@@ -54,7 +54,6 @@ function batteryRange(req, res, next, fetch = require('node-fetch')) {
  */
 function processGMBatteryRangeData(response) {
   // console.log('processing...');
-  // console.log(response)
   return new Promise((resolve, reject) => {
     try {
       const { value } = response.data.batteryLevel;
