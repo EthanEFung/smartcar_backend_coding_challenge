@@ -24,7 +24,7 @@ function vehicleInfo(req, res, next, fetch = require('node-fetch')) {
         responseType: 'JSON'
       })
     }
-    fetchGMData(path, init, req.params.id)
+    fetchGMData(path, init, req.params.id, fetch)
       .then(processGMVehicleInfoData)
       .then(data => res.send(data))
       .catch(err => res.send(err));
