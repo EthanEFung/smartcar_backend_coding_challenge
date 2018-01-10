@@ -12,7 +12,10 @@ PORT=3000
 ```
 
 Be sure to install and check to make sure that the version of node that is 
-run is 8.9.4. In the command line, you can run `node -v` to check.
+run is 8.9.4. The `npm start` script does work on the newest version of node, and
+the server the current time does run on node 9.4.0. Only, nodemon development
+dependency is not supported by the newest version of node. In the command line,
+you can run `node -v` to check.
 If node is already installed, and the version is greater than 8.9.4.,
 you can update your version by running `nvm install 8.9.4`. A 
 notification should appear that notifies that version being used is 8.9.4
