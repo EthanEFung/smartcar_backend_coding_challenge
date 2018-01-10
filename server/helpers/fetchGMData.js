@@ -10,7 +10,7 @@ const handleGMErrors = require('./handleGMErrors');
  * 
  * Optional: Testers can pass a fetch mock to limit calls to the network.
  * Otherwise, this controller defaults to the 'node-fetch' dependency.
- * Read about the dependency (here)[https://github.com/bitinn/node-fetch]
+ * Read about the dependency [here](https://github.com/bitinn/node-fetch)
  * @param {string} path
  * @param {{ headers: {}, method: string, body: JSON }} init
  * @param {number} id 
